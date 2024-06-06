@@ -1,6 +1,10 @@
 import pymysql
 import cx_Oracle
 from datetime import datetime, timedelta
+
+from sqlalchemy import create_engine
+
+
 def get_qy_mysql():
     """返回数据库连接"""
     return pymysql.connect(
@@ -27,4 +31,7 @@ def get_oracle_prod():
 
 def get_oracle_zjcs():
     return cx_Oracle.connect('zjcsprd/zjcsprd@10.118.4.4:1525/zjcs')
+
+def import_oracle_prod():
+    return create_engine('oracle+cx_oracle://h2:HDrrt_2021wbzD@10.118.4.10:1525/hydee')
 
