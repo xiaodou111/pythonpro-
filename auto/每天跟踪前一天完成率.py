@@ -1,8 +1,8 @@
 import pandas as pd
 from datetime import datetime, timedelta
 
-from auto.datalink.datalink import get_rrt_mysql, get_oracle_prod, import_oracle_prod, get_qy_mysql
-from auto.utils.excelutil import query_save_to_excel
+from auto.datalink.datalink import get_rrt_mysql, get_oracle_prod, import_oracle_prod, get_qy_mysql,dml_oracle_table
+from auto.utils.excelutil import query_save_to_excel, execute_queries_save, import_excel_to_oracle
 
 # 获取昨天的日期
 yesterday = datetime.now() - timedelta(days=1)
@@ -32,41 +32,27 @@ try:
     query_save_to_excel(connection,qydc,save_path)
 finally:
     connection.close()
-#2.连接oracle生产库并把qy库导出的excel导入到表D_RRTPROD_MEMORDER中
+#2.先删除前一天数据
+df_yesterday='delete from d_rrtprod_memorder where ORDER_DATE=trunc(sysdate-1)'
+conn = get_oracle_prod()
+if conn:
+     dml_oracle_table(conn,df_yesterday)
+#3.连接oracle生产库并把qy库导出的excel导入到表D_RRTPROD_MEMORDER中
 engine = import_oracle_prod()
-print("连接成功,正在导入excel数据！")
-df2= pd.read_excel(save_path)
-# 记录DataFrame的长度（即行数）
-num_rows = len(df2)
-try:
-#     # 将DataFrame写入数据库
-    df2.to_sql(name="D_RRTPROD_MEMORDER", con=engine, index=False, if_exists='append')
-#     # # df2 = pd.read_excel('20240605_销售s.xlsx', parse_dates=['ORDER_DATE', 'CREATE_DTME'])
-#     #
-#     # # 如果原始数据中时间信息不全，添加默认的时分秒
-#     # # df['ORDER_DATE'] = pd.to_datetime(df['ORDER_DATE']).dt.to_period('D').to_timestamp('D')
-#     # # df['CREATE_DTME'] = pd.to_datetime(df['CREATE_DTME']).dt.to_period('D').to_timestamp('D')
-#     # 输出导入成功的行数
-    print(f"导入成功，共导入 {num_rows} 行数据")
-except Exception as e:
-    # 处理可能发生的错误
-    print(f"数据导入失败：{e}")
-#3.执行瑞人堂和桐乡完成率的sql并分别导出结果excel到桌面
-try:
-    conn = get_oracle_prod()
-    print("成功连接到oracle-prod")
-    query_save_to_excel(conn, rrtwlc, save_path2)
-finally:
-    # 关闭游标和连接
-    conn.close()
+print("连接成功，正在导入Excel数据！")
+import_excel_to_oracle(engine, save_path, "D_RRTPROD_MEMORDER")
+#4.执行瑞人堂和桐乡完成率的sql并分别导出结果excel到桌面
 
 try:
     conn = get_oracle_prod()
-    print("成功连接到oracle-prod")
-    query_save_to_excel(conn, txwlc, save_path3)
+    # 假设你有多个查询和对应的保存路径
+    queries = [rrtwlc, txwlc]
+    save_paths = [save_path2, save_path3]
+    execute_queries_save(conn, queries, save_paths)
 finally:
-    # 关闭游标和连接
-    conn.close()
+    # 最终关闭连接
+    if conn:
+        conn.close()
 #4自动打开刚才的完成率两张表并格式化
 # import subprocess
 # #excel打开PERSONAL.xlsb
