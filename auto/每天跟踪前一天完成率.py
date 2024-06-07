@@ -54,11 +54,11 @@ finally:
     if conn:
         conn.close()
 #4自动打开刚才的完成率两张表并格式化
-# import subprocess
+import subprocess
 # #excel打开PERSONAL.xlsb
-# excel_exe_path = r'C:\Program Files\Microsoft Office\root\Office16\EXCEL.EXE'
-# rrt_path = save_path2
-# tx_path = save_path3
+excel_exe_path = r'C:\Program Files\Microsoft Office\root\Office16\EXCEL.EXE'
+rrt_path = save_path2
+tx_path = save_path3
 #
-# subprocess.Popen([excel_exe_path, save_path2])
-# subprocess.Popen([excel_exe_path, save_path3])
+subprocess.Popen([excel_exe_path, rrt_path])
+subprocess.Popen([excel_exe_path, tx_path])
