@@ -1,0 +1,15 @@
+{
+    "nh_cx": {
+        "销售单号": "SALENO",
+        "会员卡号": "MEMCARDNO",
+        "商品编码": "WAREID",
+        "商品数量": "WAREQTY",
+        "会计日": "ACCDATE",
+        "业务机构": "ORGNAME",
+        "实价": "SALEPRICE",
+        "金额": "NETAMT"
+    },
+    "mapping2": {
+
+    }
+}

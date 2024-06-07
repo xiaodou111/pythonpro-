@@ -39,7 +39,7 @@ def get_oracle_prod():
 def get_oracle_zjcs():
     try:
         connection = cx_Oracle.connect('zjcsprd/zjcsprd@10.118.4.4:1525/zjcs')
-        print("Oracle生产数据库连接成功！")
+        print("Oracle数据直连库连接成功！")
         return connection
     except cx_Oracle.DatabaseError as e:
         error, = e.args
