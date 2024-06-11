@@ -46,6 +46,15 @@ def get_oracle_zjcs():
         print(f"Oracle生产数据库连接失败：{error.message}")
         return None
 
+def import_oracle_zjcs():
+    try:
+        connection = create_engine('oracle+cx_oracle://zjcsprd:zjcsprd@10.118.4.4:1525/zjcs', echo=True)
+        print("Oracle直连数据库连接成功！")
+        return connection
+    except cx_Oracle.DatabaseError as e:
+        error, = e.args
+        print(f"Oracle直连数据库连接失败：{error.message}")
+        return None
 def import_oracle_prod():
     try:
         connection = create_engine('oracle+cx_oracle://h2:HDrrt_2021wbzD@10.118.4.10:1525/hydee')
