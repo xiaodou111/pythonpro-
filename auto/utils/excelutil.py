@@ -89,7 +89,7 @@ def import_excel_to_oracle(engine, excel_path, table_name):
         # 然后继续导入数据到数据库
         num_rows = len(df)
         print(num_rows)
-        df = convert_date_columns(df, 'ACCDATE')
+        # df = convert_date_columns(df, date_columns)
         # 将DataFrame写入数据库
         df.to_sql(name=table_name, con=engine, index=False, if_exists='append')
 
@@ -232,7 +232,7 @@ def rename_desk_excel_onesheet(columns_mapping):
     output_path = desktop_path + '\\' + filename + '_new.xlsx'
     rename_excel_onesheet(save_path, output_path, columns_mapping)
 
-def rename_desk_excel_one_and_import(columns_mapping,coon,table):
+def rename_desk_excel_one_and_import(columns_mapping,coon,table,*date_columns):
     desktop_path = r'D:\download\桌面'
     # filename = input("请输入Excel文件名：")
     filename = get_filename()
@@ -242,7 +242,7 @@ def rename_desk_excel_one_and_import(columns_mapping,coon,table):
     rename_excel_onesheet(save_path, output_path, columns_mapping)
     engine = coon
     print("连接成功，正在导入Excel数据！")
-    import_excel_to_oracle(engine, output_path,table)
+    import_excel_to_oracle(engine, output_path,table,*date_columns)
 def rename_excel_one_import_sql(columns_mapping,coon,table):
     desktop_path = r'D:\download\桌面'
     # filename = input("请输入Excel文件名：")

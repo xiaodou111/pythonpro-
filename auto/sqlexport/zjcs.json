@@ -1,0 +1,24 @@
+{
+    "d_sale_business1": {
+        "销售单号": "SALENO",
+        "会员卡号": "MEMCARDNO",
+        "商品编码": "WAREID",
+        "商品数量": "WAREQTY",
+        "会计日": "ACCDATE",
+        "业务机构": "ORGNAME",
+        "实价": "SALEPRICE",
+        "金额": "NETAMT"
+    },
+    "D_NH_PS_PY": {
+        "过账日期": "ZDATE",
+        "业务机构名称": "NAME1",
+        "单据类型": "DJLX",
+        "商品编码": "WAREID",
+        "生产企业": "SCQY",
+        "相关单位名称": "ORGNAME",
+        "入库数量": "RKSL",
+        "出库数量": "CKSL",
+        "批号": "PH"
+    }
+}
+
