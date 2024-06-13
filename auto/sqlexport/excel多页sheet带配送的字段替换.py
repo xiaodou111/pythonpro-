@@ -8,7 +8,7 @@ mappings_file= "zjcs.json"
 with open(mappings_file, 'r',encoding='utf-8') as file:
     mappings = json.load(file)
 
-mapping_key = mappings["D_HFYF_SALE"]
+mapping_key = mappings["D_YB_PS"]
 print(mapping_key)
 
 rename_desk_excel_manysheet(mapping_key)

@@ -213,10 +213,26 @@ def rename_excel_ps(source_path, target_path=None, columns_mapping=None):
     for sheet_name in sheet_names:
         # 读取单个sheet到DataFrame
         df = xls.parse(sheet_name)
+
         # 如果sheet名包含'配送'，则进行列名重命名
         if '配送' in sheet_name:
+            df_column_names_upper = {col.lower() for col in df.columns.tolist()}
+            mapping_columns_upper = {col.lower() for col in columns_mapping.keys()}
+            missing_cols = mapping_columns_upper - df_column_names_upper
+            print('excel缺失的列', missing_cols)
+            for col in missing_cols:
+                df[col] = None
+                # 找出 DataFrame 多余的列
+            extra_cols = df_column_names_upper - mapping_columns_upper
+            print('excel多余的列:', extra_cols)
+            # 删除 DataFrame 中多余的列
+            df.drop(columns=list(extra_cols), inplace=True)
+            print('删除的excel多余的列:', extra_cols)
+            #重命名列
             df.rename(columns=columns_mapping, inplace=True)
             print(f"对工作表'{sheet_name}'进行了列重命名！")
+            for old_name, new_name in columns_mapping.items():
+                print(f"原始列名: '{old_name}' -> 新列名: '{new_name}'")
         # 将DataFrame存储到字典中，key为sheet名
         dataframes[sheet_name] = df
     # 将修改后的DataFrame写回到Excel文件中
