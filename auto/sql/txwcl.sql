@@ -24,6 +24,7 @@ and h.ACCDATE = trunc(sysdate)-1
                and not exists(select 1 from T_SALE_RETURN_H th where th.SALENO=h.SALENO)
                and not exists(select 1 from T_SALE_RETURN_H th2 where th2.RETSALENO=h.SALENO)
                and not exists(select 1 from t_internal_sale_h ngd where SHIFTDATE>=date'2024-05-20' and ngd.NEWSALENO=h.SALENO)
+               and not exists(select 1 from d_bp_exclude_sale exc where exc.SALENO=h.SALENO)
 group by s.ZMDZ1,h.ACCDATE,h.SALENO
     ),
     new_hz as (

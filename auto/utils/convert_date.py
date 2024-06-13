@@ -11,6 +11,12 @@ def convert_date_columns(df, *date_columns):
     DataFrame: 日期格式转换后的DataFrame。
     """
     for col in date_columns:
-        df[col] = pd.to_datetime(df[col], errors='coerce')
-
+        print("指定需要转换成时间格式的字段:",col)
+        try:
+            df[col] =df[col].astype('datetime64[ns]')
+        except Exception as e:
+            # 处理可能发生的错误
+            print(f"数据转换失败11111：{e}")
+    print('修改后DataFrame数据类型')
+    print(df.dtypes)
     return df

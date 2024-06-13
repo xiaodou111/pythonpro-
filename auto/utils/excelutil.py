@@ -97,6 +97,48 @@ def import_excel_to_oracle(engine, excel_path, table_name):
     except Exception as e:
         # 处理可能发生的错误
         print(f"数据导入失败：{e}")
+def import_excel_to_oracle_test(engine, excel_path, table_name,*date_columns):
+    """
+    从Excel文件导入数据到Oracle数据库。
+
+    :param engine: 数据库连接引擎
+    :param excel_path: Excel文件的路径
+    :param table_name: 目标数据库表名
+    """
+    try:
+        # 读取Excel数据
+        df = pd.read_excel(excel_path)
+
+        # 获取数据库表的列名
+        table_columns = pd.read_sql(f"SELECT * FROM {table_name} WHERE ROWNUM <= 0", engine).columns
+        df_column_names_upper = {col.lower() for col in df.columns.tolist()}
+        table_columns_upper = {col.lower() for col in table_columns.tolist()}
+        # 找出 DataFrame 缺失的列
+        missing_cols = table_columns_upper - df_column_names_upper
+        print('excel缺失的列',missing_cols)
+        # 为 DataFrame 添加缺失的列，并填充 NULL 或默认值
+        for col in missing_cols:
+            df[col] = None  # 或者 df[col] = some_default_value
+
+        # 找出 DataFrame 多余的列
+        extra_cols = df_column_names_upper - table_columns_upper
+        print('excel多余的列:',extra_cols)
+        # 删除 DataFrame 中多余的列
+        df.drop(columns=list(extra_cols), inplace=True)
+        print(f'即将从excel:{excel_path}导入到表:{table_name}中的列:', df.columns)
+        # 然后继续导入数据到数据库
+        num_rows = len(df)
+        print(num_rows)
+
+        df = convert_date_columns(df, date_columns)
+
+        # 将DataFrame写入数据库
+        df.to_sql(name=table_name, con=engine, index=False, if_exists='append')
+
+        print(f"导入成功，共导入 {num_rows} 行数据")
+    except Exception as e:
+        # 处理可能发生的错误
+        print(f"数据导入失败：{e}")
 #把excel生成sql插入数据库表
 def import_excel_to_oracle_usesql(engine, excel_path, table_name, column_mapping=None):
     try:
@@ -139,6 +181,17 @@ def import_excel_to_oracle_usesql(engine, excel_path, table_name, column_mapping
 def read_excel(file_path):
     return pd.read_excel(file_path, engine='openpyxl')
 
+def rename_desk_excel_manysheet(columns_mapping):
+    desktop_path = r'D:\download\桌面'
+    # filename = input("请输入Excel文件名：")
+    filename  = get_filename()
+    #
+    # save_path = desktop_path + '\\' + filename + '.xlsx'
+    save_path = filename
+    base_name, extension = filename.rsplit('.', 1)  # 分离文件名和扩展名
+    output_path = f"{base_name}{'_clean'}.{extension}"  # 构建新的文件名
+    # output_path = desktop_path + '\\' + filename + '_clean.xlsx'
+    rename_excel_ps(save_path, output_path, columns_mapping)
 # 写入Excel文件的函数
 def write_to_excel(df_dict, output_file):
     with pd.ExcelWriter(output_file, engine='openpyxl') as writer:
@@ -150,49 +203,35 @@ def rename_excel_ps(source_path, target_path=None, columns_mapping=None):
     # 读取Excel文件
     xls = pd.ExcelFile(source_path)
     sheet_names = xls.sheet_names
-
+    print("读取到的sheet_names:",sheet_names)
     # 创建一个字典，用于存储所有sheet的数据帧
     dataframes = {}
-
     # 如果没有指定目标路径，则默认保存在原位置
     if target_path is None:
         target_path = source_path
-
-    # 如果没有提供列名映射，则使用默认映射
-    if columns_mapping is None:
-        columns_mapping = {
-            '过账日期': 'ZDATE',
-            '业务机构名称': 'NAME1',
-            '单据类型': 'DJLX',
-            '商品编码': 'WAREID',
-            '生产企业': 'SCQY',
-            '相关单位名称': 'ORGNAME',
-            '入库数量': 'RKSL',
-            '出库数量': 'CKSL',
-            '批号': 'PH'
-        }
-
     # 遍历所有sheet
     for sheet_name in sheet_names:
         # 读取单个sheet到DataFrame
         df = xls.parse(sheet_name)
-
         # 如果sheet名包含'配送'，则进行列名重命名
         if '配送' in sheet_name:
             df.rename(columns=columns_mapping, inplace=True)
             print(f"对工作表'{sheet_name}'进行了列重命名！")
-
         # 将DataFrame存储到字典中，key为sheet名
         dataframes[sheet_name] = df
-
     # 将修改后的DataFrame写回到Excel文件中
-    with pd.ExcelWriter(target_path) as writer:
-        for sheet_name, df in dataframes.items():
-            df.to_excel(writer, sheet_name=sheet_name, index=False)
-
-    print(f"所有工作表已保存至Excel文件{target_path}。")
-    #打开工作薄
-    subprocess.Popen([excel_exe_path, target_path])
+    try:
+        with pd.ExcelWriter(target_path, engine='openpyxl') as writer:
+            for sheet_name, df in dataframes.items():
+                df.to_excel(writer, sheet_name=sheet_name, index=False)
+        print(f"所有工作表已保存至Excel文件{target_path}。")
+    except Exception as e:
+        print(f"在写入Excel文件时发生错误：{e}")
+    try:
+        print("正在打开excel文件中-------")
+        subprocess.Popen([excel_exe_path, target_path])
+    except Exception as e:
+        print(f"打开文件失败，请手动打开文件。错误信息：{e}")
 #单页任意excel清洗
 def rename_excel_onesheet(source_path, target_path=None, columns_mapping=None):
     # 读取Excel文件
@@ -219,6 +258,7 @@ def rename_excel_onesheet(source_path, target_path=None, columns_mapping=None):
     # 打开工作簿
 
     try:
+        print("正在打开excel文件中-------")
         subprocess.Popen([excel_exe_path, target_path])
     except Exception as e:
         print(f"打开文件失败，请手动打开文件。错误信息：{e}")
@@ -226,10 +266,13 @@ def rename_excel_onesheet(source_path, target_path=None, columns_mapping=None):
 def rename_desk_excel_onesheet(columns_mapping):
     desktop_path = r'D:\download\桌面'
     # filename = input("请输入Excel文件名：")
-    filename = get_filename()
+    filename  = get_filename()
     #
-    save_path = desktop_path + '\\' + filename + '.xlsx'
-    output_path = desktop_path + '\\' + filename + '_new.xlsx'
+    # save_path = desktop_path + '\\' + filename + '.xlsx'
+    save_path = filename
+    base_name, extension = filename.rsplit('.', 1)  # 分离文件名和扩展名
+    output_path = f"{base_name}{'_clean'}.{extension}"  # 构建新的文件名
+    # output_path = desktop_path + '\\' + filename + '_clean.xlsx'
     rename_excel_onesheet(save_path, output_path, columns_mapping)
 
 def rename_desk_excel_one_and_import(columns_mapping,coon,table,*date_columns):

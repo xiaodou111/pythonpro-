@@ -45,3 +45,4 @@ where hdr.tenant_num_id = 18
   and hdr.status_num_id = 6
 and hdr.order_date=DATE_SUB(CURDATE(), INTERVAL 1 DAY)
 -- and hdr.order_date=CURDATE()
+-- and hdr.order_date=date'2024-06-07'

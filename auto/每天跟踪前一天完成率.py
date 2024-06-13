@@ -33,7 +33,7 @@ try:
 finally:
     connection.close()
 #2.先删除前一天数据
-df_yesterday='delete from d_rrtprod_memorder where ORDER_DATE=trunc(sysdate-1)'
+df_yesterday='delete from d_rrtprod_memorder where ORDER_DATE=trunc(sysdate)-1'
 conn = get_oracle_prod()
 if conn:
      dml_oracle_table(conn,df_yesterday)
