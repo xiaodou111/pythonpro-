@@ -2,6 +2,9 @@ import pandas as pd
 #执行SQL查询并将结果保存为Excel文件。
 import subprocess
 
+from openpyxl.reader.excel import load_workbook
+from openpyxl.styles import NumberFormatDescriptor
+
 from auto.datalink.datalink import import_oracle_prod, get_oracle_zjcs
 from auto.utils.convert_date import convert_date_columns
 from auto.utils.gui import get_filename
@@ -313,3 +316,54 @@ def rename_excel_one_import_sql(columns_mapping,coon,table):
     engine = coon
     print("连接成功，正在导入Excel数据！")
     import_excel_to_oracle_usesql(engine, output_path,table,columns_mapping)
+#合并多页excel到一页
+import pandas as pd
+
+def merge_excel_sheet():
+# 定义输入和输出文件       路径
+      # filename = input("请输入Excel文件名：")
+      filename = get_filename()
+      # save_path = desktop_path + '\\' + filename + '.xlsx'
+      save_path = filename
+      base_name, extension = filename.rsplit('.', 1)  # 分离文件名和扩展名
+      output_path = f"{base_name}{'_clean'}.{extension}"  # 构建新的文件名
+      # 读取所有工作表
+      xls = pd.read_excel(save_path, sheet_name=None)
+      df = xls['6.2']
+      pd.set_option('display.float_format', lambda x: '%.0f' % x)
+      print(df['销售单号'].dtype)
+      print(df['销售单号'])
+      # 初始化一个空的 DataFrame
+      combined_df = pd.DataFrame()
+      # 合并所有工作表
+      for sheet_name, df in xls.items():
+          df['Sheet_Name'] = sheet_name
+
+          combined_df = pd.concat([combined_df, df], ignore_index=True)
+      # 写入新的 Excel 文件
+      df_none=combined_df.columns[combined_df.isnull().all()]
+      print(df_none)
+      combined_df = combined_df.dropna(how='all', axis=1)  # 删除所有值都是 NaN 的列
+      #如果这些列为空,那么删除所在行
+      delete_rows=['销售单号']
+      # 删除这些列中任何一列值为 NaN 的行
+      combined_df = combined_df.dropna(subset=delete_rows)
+      # combined_df['销售单号'] = combined_df['销售单号'].apply(lambda x: str(x))
+      # combined_df['销售单号'] = combined_df['销售单号'].astype(str)
+      print(combined_df['销售单号'].dtype)
+      print(combined_df['销售单号'])
+      combined_df.to_excel(output_path, index=False)
+#       wb = load_workbook(output_path)
+#       ws = wb.active
+#
+# # 设置列B的格式
+#       for cell in ws['B']:
+#               cell.number_format = NumberFormatDescriptor(fmt_code='0')  # 显示整数
+#
+# # 保存修改
+#       wb.save(output_path)
+      try:
+          print("正在打开excel文件中-------")
+          subprocess.Popen([excel_exe_path, output_path])
+      except Exception as e:
+          print(f"打开文件失败，请手动打开文件。错误信息：{e}")
