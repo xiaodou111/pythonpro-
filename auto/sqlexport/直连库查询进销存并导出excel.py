@@ -1,7 +1,8 @@
 from datetime import date
 
 from auto.datalink.datalink import get_oracle_zjcs
-from auto.utils.excelutil import execute_queries_save, read_excel, write_to_excel
+from auto.utils.excelutil import  read_excel, write_to_excel
+from auto.utils.sqlutil import execute_queries_save
 
 # from auto.每天跟踪前一天完成率 import desktop_path
 desktop_path = r'D:\download\桌面'
@@ -19,7 +20,7 @@ save_path3 = desktop_path + '\\' + filename3
 
 ps="""select * from V_SALE_NH_P001 where CJSJ between date'2024-01-01' and date'2024-01-10' """
 cg="""select * from V_accept_NH_P001 where CJSJ between date'2024-01-01' and date'2024-02-01'"""
-kc="""select * from V_kc_NH_P001"""
+kc="""select * from V_KC_NH_P001"""
 
 try:
     conn = get_oracle_zjcs()

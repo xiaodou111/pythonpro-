@@ -5,6 +5,7 @@ with new as (select order_date, MANAGER_CODE, tml_num_id
                     from D_RRT_QY_COMPID_BUSNO
                     where OBUSNO in (select BUSNO from D_BP_BUSNO))
                and order_date = trunc(sysdate)-1
+               and so_from_type = 17
              group by order_date, MANAGER_CODE, tml_num_id),
 
      old as (select s.ZMDZ1, h.ACCDATE, h.SALENO
@@ -14,7 +15,7 @@ with new as (select order_date, MANAGER_CODE, tml_num_id
                       left join s_busi s on h.BUSNO = s.BUSNO
              where s.busno in (select BUSNO from D_BP_BUSNO)
                and h.ACCDATE = trunc(sysdate)-1
-               and not exists(select 1
+               and exists(select 1
                               from t_sale_pay p
                               where p.saleno = h.saleno and p.paytype in
                                                             ('Z022', 'Z025', 'Z027', 'Z030', 'Z032', 'Z034', 'Z077',
