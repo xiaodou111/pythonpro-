@@ -52,3 +52,4 @@ select q.ACCDATE as 日期, q.ZMDZ1 as 门店组编码, s.ORGNAME as 门店名�
        q.新系统数量, q.bl as 录单比率
 from re q
   left join s_busi s on q.ZMDZ1=s.BUSNO
+where q.ZMDZ1<>86242

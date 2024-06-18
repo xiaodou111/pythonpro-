@@ -86,8 +86,8 @@ def dml_oracle_table(connection, sql):
         print(f"DML操作失败：{e}")
         # 可以在此处添加更多的错误处理逻辑，如记录到日志文件
         # logging.error(f"DML操作失败：{e}", exc_info=True)
-    finally:
+    # finally:
     # 确保在所有情况下都关闭连接（如果适用）
-            connection.close()  # 注意：这取决于你的连接管理策略
+    #         connection.close()  # 注意：这取决于你的连接管理策略
 
 
