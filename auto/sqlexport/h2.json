@@ -25,24 +25,6 @@
         "生产批号": "MAKENO",
         "单价": "DJ"
     },
-    "D_LX_MDYSCKD":
-    {
-      "会计日": "ACCDATE",
-      "仓库": "CK",
-      "单据类型": "DJLX",
-      "入库数量": "RKSL",
-      "出库数量": "CKSL",
-      "商品编码": "WAREID",
-      "商品名称": "WARENAME",
-      "规格": "GG",
-      "生产企业": "SCQY",
-      "业务机构名称": "ORGNAME",
-      "备注": "NOTES",
-      "单位": "WAREUNIT",
-      "生产批号": "MAKENO",
-      "单价": "DJ",
-      "机构编码": "BUSNO"
-},
     "D_NH_PS_PY": {
         "过账日期": "ZDATE",
         "业务机构名称": "NAME1",

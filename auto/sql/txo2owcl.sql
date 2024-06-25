@@ -45,7 +45,7 @@ with new as (select order_date, MANAGER_CODE, tml_num_id
                 and a.ACCDATE = b.order_date
             order by a.ZMDZ1, a.ACCDATE)
 select q.ACCDATE as 日期, q.ZMDZ1 as 门店组编码, s.ORGNAME as 门店名称, q.老系统销售单数,
-       q.新系统数量, q.bl as 录单比率--,b.RN as 门店批次
+       q.新系统数量, q.bl as 录单比率,b.RN as 门店批次
 from re q
          left join s_busi s on q.ZMDZ1 = s.BUSNO
          left join D_BP_BUSNO b on q.ZMDZ1=b.BUSNO

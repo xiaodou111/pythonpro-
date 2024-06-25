@@ -9,7 +9,7 @@ with open(mappings_file, 'r',encoding='utf-8') as file:
     mappings = json.load(file)
     # print(mappings)
 
-mapping_key = mappings["D_LX_MDYSCKD"]
+mapping_key = mappings["D_TSL_BUSINESS"]
 print(mapping_key)
 
 
