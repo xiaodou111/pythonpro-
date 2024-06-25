@@ -5,7 +5,7 @@ select order_date,s.ZMDZ1 as MANAGER_CODE,tml_num_id from d_rrtprod_memorder a
 where sub_unit_num_id in (select NBUSNO
                     from D_RRT_QY_COMPID_BUSNO
                     where OBUSNO in (select busno from s_busi where COMPID=1900))
-and order_date = trunc(sysdate)-1
+and order_date = trunc(sysdate)-2
 and not exists(select 1 from d_rrtprod_memorder ex1 WHERE ex1.order_date >= date'2024-06-13' and ex1.create_user_id <= 1 and ex1.series=a.series)
  group by order_date,s.ZMDZ1,tml_num_id),
     old as (
@@ -14,7 +14,7 @@ select s.ZMDZ1,h.ACCDATE,h.SALENO
        join t_ware_base w on d.WAREID=w.WAREID
        left join s_busi s on h.BUSNO = s.BUSNO
 where s.BUSNO in (select busno from s_busi where COMPID=1900)
-and h.ACCDATE = trunc(sysdate)-1
+and h.ACCDATE = trunc(sysdate)-2
  and not exists(select 1
                               from t_sale_pay p
                               where p.saleno = h.saleno and p.paytype in

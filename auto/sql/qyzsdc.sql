@@ -8,4 +8,4 @@ on hdr.sub_unit_num_id = sub.sub_unit_num_id
          where logical_storageid in (1,2,3,4) and hdr.tenant_num_id = 18
   and hdr.data_sign = 0
   and hdr.status_num_id = 6
-and hdr.order_date=DATE_SUB(CURDATE(), INTERVAL 1 DAY)
+and hdr.order_date=DATE_SUB(CURDATE(), INTERVAL 2 DAY)
