@@ -23,7 +23,9 @@ qyzsdc=sql_queries['qyzsdc']
 rrto2owcl=sql_queries['rrto2owcl']
 rrtwcl=sql_queries['rrtwcl']
 txwcl=sql_queries['txwcl']
-zsdjwcl=sql_queries['zsdjwcl']
+rrtzswcl=sql_queries['rrtzswcl']
+txo2owcl=sql_queries['txo2owcl']
+txzswcl=sql_queries['txzswcl']
 
 
 

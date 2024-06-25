@@ -8,7 +8,7 @@ from auto.utils.excelutil import  import_excel_to_oracle
 from auto.utils.sqlutil import execute_queries_save, query_save_to_excel
 
 # 获取昨天的日期
-yesterday = datetime.now() - timedelta(days=2)
+yesterday = datetime.now() - timedelta(days=1)
 # 格式化日期为字符串
 formatted_date = yesterday.strftime('%Y%m%d')
 out_file=f'{formatted_date}_完成率.xlsx'
@@ -66,8 +66,8 @@ try:
 finally:
     connection.close()
 #2.先删除前一天数据
-df_yesterday='delete from d_rrtprod_memorder where ORDER_DATE=trunc(sysdate)-2'
-df_yesterday_zs='delete from D_QY_ZSDJ where ORDER_DATE=trunc(sysdate)-2'
+df_yesterday='delete from d_rrtprod_memorder where ORDER_DATE=trunc(sysdate)-1'
+df_yesterday_zs='delete from D_QY_ZSDJ where ORDER_DATE=trunc(sysdate)-1'
 conn = get_oracle_prod()
 if conn:
      try:
@@ -94,7 +94,7 @@ finally:
     if conn:
         conn.close()
 #5.合并sheet页
-output_file = desktop_path + '\\' + 'test.xlsx'
+# output_file = desktop_path + '\\' + 'test.xlsx'
 excel_data_dict = {}
 # save_paths = [save_path2, save_path3,save_rrt_o2o]
 # 遍历每个Excel文件
