@@ -94,7 +94,7 @@ finally:
     if conn:
         conn.close()
 #5.合并sheet页
-output_file = desktop_path + '\\' + 'test.xlsx'
+# output_file = desktop_path + '\\' + 'test.xlsx'
 excel_data_dict = {}
 # save_paths = [save_path2, save_path3,save_rrt_o2o]
 # 遍历每个Excel文件

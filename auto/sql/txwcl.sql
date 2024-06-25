@@ -6,8 +6,8 @@ where sub_unit_num_id in (select NBUSNO
                     from D_RRT_QY_COMPID_BUSNO
                     where OBUSNO in (select busno from s_busi where COMPID=1900))
 and order_date = trunc(sysdate)-1
+and not exists(select 1 from d_rrtprod_memorder ex1 WHERE ex1.order_date >= date'2024-06-13' and ex1.create_user_id <= 1 and ex1.series=a.series)
  group by order_date,s.ZMDZ1,tml_num_id),
-
     old as (
 select s.ZMDZ1,h.ACCDATE,h.SALENO
        from t_sale_h h join t_sale_d d on h.SALENO=d.SALENO

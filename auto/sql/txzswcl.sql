@@ -2,7 +2,7 @@ with new as (select order_date,'4600' as SUB_UNIT_NUM_ID, tml_num_id
              from d_qy_zsdj
              where
               SUB_UNIT_NUM_ID='TZ11'
-             and order_date = trunc(sysdate)-1
+             and order_date = trunc(sysdate)-1 and LOGICAL_STORAGEID=1 and EMPE_NAME is not null
              group by order_date, SUB_UNIT_NUM_ID, tml_num_id),
      old as (select trunc(REG_DATE) as REG_DATE,BUSNO,REGISTER_NO from t_med_register_h
                     where trunc(REG_DATE)=trunc(sysdate)-1 and BUSNO=84600

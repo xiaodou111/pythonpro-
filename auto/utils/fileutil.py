@@ -11,6 +11,7 @@ def load_sql_files(directory):
     for filename in os.listdir(directory):
         if filename.endswith('.sql'):
             filepath = os.path.join(directory, filename)
+            print(filepath[:-4])
             sql_files[filename[:-4]] = read_file_content(filepath)
     return sql_files
 
@@ -23,9 +24,11 @@ qyzsdc=sql_queries['qyzsdc']
 rrto2owcl=sql_queries['rrto2owcl']
 rrtwcl=sql_queries['rrtwcl']
 txwcl=sql_queries['txwcl']
-zsdjwcl=sql_queries['zsdjwcl']
+rrtzswcl=sql_queries['rrtzswcl']
+txo2owcl=sql_queries['txo2owcl']
+txzswcl=sql_queries['txzswcl']
 
 
 
-print(sql_queries['qydc'])
+# print(sql_queries['qydc'])
 # print(os.getcwd())

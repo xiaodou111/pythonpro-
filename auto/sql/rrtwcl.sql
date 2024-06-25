@@ -5,6 +5,7 @@ with new as (select order_date, MANAGER_CODE, tml_num_id
                     from D_RRT_QY_COMPID_BUSNO
                     where OBUSNO in (select BUSNO from D_BP_BUSNO))
                and order_date = trunc(sysdate)-1
+               and not exists(select 1 from d_rrtprod_memorder ex1 WHERE ex1.order_date >= date'2024-06-13' and ex1.create_user_id <= 1 and ex1.series=d_rrtprod_memorder.series)
              group by order_date, MANAGER_CODE, tml_num_id),
 
      old as (select s.ZMDZ1, h.ACCDATE, h.SALENO

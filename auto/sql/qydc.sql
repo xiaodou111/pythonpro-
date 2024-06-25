@@ -44,6 +44,6 @@ where hdr.tenant_num_id = 18
   and hdr.data_sign = 0
   and hdr.status_num_id = 6
 and hdr.order_date=DATE_SUB(CURDATE(), INTERVAL 1 DAY)
-and not exists(select 1 from rrtprod_memorder.sd_bl_so_tml_hdr ex1 WHERE ex1.order_date >= '2024-06-13' and ex1.create_user_id <= 1 and ex1.series=hdr.series )
+-- and not exists(select 1 from rrtprod_memorder.sd_bl_so_tml_hdr ex1 WHERE ex1.order_date >= '2024-06-13' and ex1.create_user_id <= 1 and ex1.series=hdr.series )
 -- and hdr.order_date=CURDATE()
 -- and hdr.order_date=date'2024-06-07'
