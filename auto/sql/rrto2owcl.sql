@@ -4,7 +4,7 @@ with new as (select order_date, MANAGER_CODE, tml_num_id
                    (select NBUSNO
                     from D_RRT_QY_COMPID_BUSNO
                     where OBUSNO in (select BUSNO from D_BP_BUSNO))
-               and order_date = trunc(sysdate)-2
+               and order_date = trunc(sysdate) ---1
                and so_from_type = 17
              group by order_date, MANAGER_CODE, tml_num_id),
 
@@ -14,7 +14,7 @@ with new as (select order_date, MANAGER_CODE, tml_num_id
                       join t_ware_base w on d.WAREID = w.WAREID
                       left join s_busi s on h.BUSNO = s.BUSNO
              where s.busno in (select BUSNO from D_BP_BUSNO)
-               and h.ACCDATE = trunc(sysdate)-2
+               and h.ACCDATE = trunc(sysdate)---1
                and exists(select 1
                               from t_sale_pay p
                               where p.saleno = h.saleno and p.paytype in
