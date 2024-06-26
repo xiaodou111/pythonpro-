@@ -135,7 +135,9 @@ def rename_desk_excel_onesheet(columns_mapping):
     base_name, extension = filename.rsplit('.', 1)  # 分离文件名和扩展名
     output_path = f"{base_name}{'_clean'}.{extension}"  # 构建新的文件名
     # output_path = desktop_path + '\\' + filename + '_clean.xlsx'
+    subprocess.Popen([excel_exe_path, output_path]).terminate()
     rename_excel_onesheet(save_path, output_path, columns_mapping)
+    return output_path
 
 def rename_desk_excel_one_and_import(columns_mapping,coon,table,*date_columns):
     desktop_path = r'D:\download\桌面'
