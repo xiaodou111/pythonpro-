@@ -23,19 +23,19 @@ select HDR.ORDER_DATE,
        HDR.VIP_NO,
        hdr.CREATE_USER_ID,
        sub.MANAGER_CODE
-from rrtprod_memorder.sd_bl_so_tml_hdr hdr
-         inner join rrtprod_memorder.sd_bl_so_tml_lock_dtl dtl  -- sd_bl_so_tml_lock_dtl销售明细表
+from rrtuat_memorder.sd_bl_so_tml_hdr hdr
+         inner join rrtuat_memorder.sd_bl_so_tml_lock_dtl dtl  -- sd_bl_so_tml_lock_dtl销售明细表
                     on hdr.tenant_num_id = dtl.tenant_num_id
                         and hdr.data_sign = dtl.data_sign
                         and hdr.order_date = dtl.order_date
                         and hdr.cort_num_id = dtl.cort_num_id
                         and hdr.sub_unit_num_id = dtl.sub_unit_num_id
                         and hdr.tml_num_id = dtl.tml_num_id
-         inner join rrtprod_mdm.mdms_p_product_unit unit
+         inner join rrtuat_mdm.mdms_p_product_unit unit
                     on dtl.cort_num_id = unit.cort_num_id and dtl.tenant_num_id = unit.tenant_num_id
    and dtl.data_sign = unit.data_sign
    and dtl.item_num_id = unit.item_num_id
-	 	  inner join rrtprod_mdm.mdms_o_sub_unit sub
+	 	  inner join rrtuat_mdm.mdms_o_sub_unit sub
 on dtl.sub_unit_num_id = sub.sub_unit_num_id
     and dtl.tenant_num_id = unit.tenant_num_id
     and dtl.data_sign = unit.data_sign
@@ -43,7 +43,7 @@ on dtl.sub_unit_num_id = sub.sub_unit_num_id
 where hdr.tenant_num_id = 18
   and hdr.data_sign = 0
   and hdr.status_num_id = 6
--- and hdr.order_date=DATE_SUB(CURDATE(), INTERVAL 1 DAY)
+and hdr.order_date=DATE_SUB(CURDATE(), INTERVAL 1 DAY)
 -- and not exists(select 1 from rrtprod_memorder.sd_bl_so_tml_hdr ex1 WHERE ex1.order_date >= '2024-06-13' and ex1.create_user_id <= 1 and ex1.series=hdr.series )
-and hdr.order_date=CURDATE()
+-- and hdr.order_date=CURDATE()
 -- and hdr.order_date=date'2024-06-07'

@@ -5,10 +5,10 @@ with new as (select order_date, SUB_UNIT_NUM_ID, tml_num_id
 --                    (select NBUSNO
 --                     from D_RRT_QY_COMPID_BUSNO
 --                     where OBUSNO in (select BUSNO from D_BP_BUSNO))
-             order_date = trunc(sysdate) and LOGICAL_STORAGEID=1 and EMPE_NAME is not null
+             order_date = trunc(sysdate)-1 and LOGICAL_STORAGEID=1 and EMPE_NAME is not null
              group by order_date, SUB_UNIT_NUM_ID, tml_num_id),
 
-     old as (select trunc(REG_DATE) as REG_DATE,BUSNO,REGISTER_NO from t_med_register_h where trunc(REG_DATE)=trunc(sysdate)
+     old as (select trunc(REG_DATE) as REG_DATE,BUSNO,REGISTER_NO from t_med_register_h where trunc(REG_DATE)=trunc(sysdate)-1
              group by trunc(REG_DATE), BUSNO,REGISTER_NO),
      new_hz as (select order_date, SUB_UNIT_NUM_ID, count(tml_num_id) sumsl
                 from new
@@ -30,7 +30,6 @@ with new as (select order_date, SUB_UNIT_NUM_ID, tml_num_id
             order by a.BUSNO, a.REG_DATE)
 select q.REG_DATE as 日期, q.BUSNO as 门店编码, s.ORGNAME as 门店名称, q.老系统销售单数,
        q.新系统数量, q.bl as 录单比率
---        ,b.RN as 门店批次
 from re q
          left join s_busi s on q.BUSNO = s.BUSNO
 --          left join D_BP_BUSNO b on q.BUSNO=b.BUSNO

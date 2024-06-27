@@ -3,12 +3,13 @@ import os
 import pandas as pd
 from datetime import datetime, timedelta
 
-from auto.datalink.datalink import get_rrt_mysql, get_oracle_prod, import_oracle_prod, get_qy_mysql,dml_oracle_table
+from auto.datalink.datalink import get_rrt_mysql, get_oracle_prod, import_oracle_prod, get_qy_mysql, dml_oracle_table, \
+    get_qy_uatmysql
 from auto.utils.excelutil import  import_excel_to_oracle
 from auto.utils.sqlutil import execute_queries_save, query_save_to_excel
 
 # 获取昨天的日期
-yesterday = datetime.now() #- timedelta(days=1)
+yesterday = datetime.now() - timedelta(days=1)
 # 格式化日期为字符串
 formatted_date = yesterday.strftime('%Y%m%d')
 out_file=f'{formatted_date}_完成率.xlsx'
@@ -59,15 +60,15 @@ with open('./sql/txzswcl.sql', 'r', encoding='utf-8') as file:
     txzswcl = file.read()
 #1.连接qy库并导出sql结果为excel到桌面
 try:
-    connection = get_qy_mysql()
+    connection = get_qy_uatmysql()
     print("连接成功,导出数据中！")
     query_save_to_excel(connection,qydc,save_sale)
     query_save_to_excel(connection, qyzsdc, save_qy_zsdc)
 finally:
     connection.close()
 #2.先删除前一天数据
-df_yesterday='delete from d_rrtprod_memorder where ORDER_DATE=trunc(sysdate)'
-df_yesterday_zs='delete from D_QY_ZSDJ where ORDER_DATE=trunc(sysdate)'
+df_yesterday='delete from d_rrtprod_memorder where ORDER_DATE=trunc(sysdate)-1'
+df_yesterday_zs='delete from D_QY_ZSDJ where ORDER_DATE=trunc(sysdate)-1'
 conn = get_oracle_prod()
 if conn:
      try:

@@ -17,6 +17,18 @@ def get_qy_mysql():
         cursorclass=pymysql.cursors.DictCursor
     )
 
+def get_qy_uatmysql():
+    """返回数据库连接"""
+    return pymysql.connect(
+        host='172.20.2.15',
+        user='rrtuatquery',
+        port=5066,
+        password='x=^6fVC2pGS',
+        database='',  # 如果需要指定数据库，在这里填写
+        charset='utf8mb4',
+        cursorclass=pymysql.cursors.DictCursor
+    )
+
 def get_rrt_mysql():
     return  pymysql.connect(host='192.168.254.169',
                     user='yanjiangyi',
