@@ -15,12 +15,13 @@ formatted_date = yesterday.strftime('%Y%m%d')
 out_file=f'{formatted_date}_完成率.xlsx'
 file_sale = f'{formatted_date}_销售.xlsx'
 file_qy_zsdc = f'{formatted_date}_药店通诊所挂号记录.xlsx'
-file_rrtwcl = f'{formatted_date}_瑞人堂完成率.xlsx'
+# file_rrtwcl = f'{formatted_date}_瑞人堂完成率.xlsx'
+file_rrtmergewcl = f'{formatted_date}_瑞人堂合并完成率.xlsx'
 file_rrtwclhz = f'{formatted_date}_瑞人堂完成率事业部片区汇总.xlsx'
 file_txwcl = f'{formatted_date}_桐乡完成率.xlsx'
-file_rrt_o2owcl= f'{formatted_date}_瑞人堂o2o完成率.xlsx'
+# file_rrt_o2owcl= f'{formatted_date}_瑞人堂o2o完成率.xlsx'
 file_tx_o2owcl=f'{formatted_date}_桐乡o2o完成率.xlsx'
-file_rrt_zswcl=f'{formatted_date}_瑞人堂诊所完成率.xlsx'
+# file_rrt_zswcl=f'{formatted_date}_瑞人堂诊所完成率.xlsx'
 file_tx_zswcl=f'{formatted_date}_桐乡诊所完成率.xlsx'
 # file_tx_o2o = f'{formatted_date}_桐乡o2o完成率.xlsx'
 # filename = f'{formatted_date}_销售.csv'
@@ -28,35 +29,39 @@ desktop_path = r'D:\download\桌面'
 output_file = os.path.join(desktop_path, out_file)
 save_sale = os.path.join(desktop_path, file_sale)
 save_qy_zsdc = os.path.join(desktop_path, file_qy_zsdc)
-save_rrtwcl = os.path.join(desktop_path, file_rrtwcl)
-save_rrtwclhz = os.path.join(desktop_path, file_rrtwcl)
+# save_rrtwcl = os.path.join(desktop_path, file_rrtwcl)
+save_rrtmergewcl = os.path.join(desktop_path, file_rrtmergewcl)
+save_rrtwclhz = os.path.join(desktop_path, file_rrtwclhz)
 save_txwcl = os.path.join(desktop_path, file_txwcl)
-save_rrt_o2owcl = os.path.join(desktop_path, file_rrt_o2owcl)
+# save_rrt_o2owcl = os.path.join(desktop_path, file_rrt_o2owcl)
 save_tx_o2owcl = os.path.join(desktop_path, file_tx_o2owcl)
-save_rrt_zswcl = os.path.join(desktop_path, file_rrt_zswcl)
+# save_rrt_zswcl = os.path.join(desktop_path, file_rrt_zswcl)
 save_tx_zswcl = os.path.join(desktop_path, file_tx_zswcl)
 
 print(f"save_path:{save_sale}")
 print(f"save_path2:{save_qy_zsdc}")
-print(f"save_path3:{save_rrtwcl}")
+# print(f"save_path3:{save_rrtwcl}")
+print(f"save_path3:{save_rrtmergewcl}")
 print(f"save_path3:{save_rrtwclhz}")
 print(f"save_path3:{save_txwcl}")
-print(f"save_path3:{save_rrt_o2owcl}")
+# print(f"save_path3:{save_rrt_o2owcl}")
 print(f"save_path3:{save_tx_o2owcl}")
-print(f"save_path3:{save_rrt_zswcl}")
+# print(f"save_path3:{save_rrt_zswcl}")
 print(f"save_path3:{save_tx_zswcl}")
 with open('./sql/qydc.sql', 'r', encoding='utf-8') as file:
     qydc = file.read()
 with open('./sql/qyzsdc.sql', 'r', encoding='utf-8') as file:
     qyzsdc = file.read()
-with open('./sql/rrto2owcl.sql.', 'r', encoding='utf-8') as file:
-    rrto2owcl = file.read()
-with open('./sql/rrtwcl.sql', 'r', encoding='utf-8') as file:
-    rrtwlc = file.read()
+# with open('./sql/rrto2owcl.sql.', 'r', encoding='utf-8') as file:
+#     rrto2owcl = file.read()
+# with open('./sql/rrtwcl.sql', 'r', encoding='utf-8') as file:
+#     rrtwlc = file.read()
+with open('./sql/rrtmergewcl.sql', 'r', encoding='utf-8') as file:
+    rrtmergewcl = file.read()
 with open('./sql/rrtwclhz.sql', 'r', encoding='utf-8') as file:
     rrtwclhz = file.read()
-with open('./sql/rrtzswcl.sql', 'r', encoding='utf-8') as file:
-    rrtzswcl = file.read()
+# with open('./sql/rrtzswcl.sql', 'r', encoding='utf-8') as file:
+#     rrtzswcl = file.read()
 with open('./sql/txo2owcl.sql', 'r', encoding='utf-8') as file:
     txo2owcl = file.read()
 with open('./sql/txwcl.sql', 'r', encoding='utf-8') as file:
@@ -92,8 +97,8 @@ import_excel_to_oracle(engine, save_qy_zsdc, "D_QY_ZSDJ")
 try:
     conn = get_oracle_prod()
     # 假设你有多个查询和对应的保存路径
-    queries = [rrtwlc,rrtwclhz,txwlc,rrto2owcl,txo2owcl,rrtzswcl,txzswcl]
-    save_paths = [save_rrtwcl,save_rrtwclhz,save_txwcl,save_rrt_o2owcl,save_tx_o2owcl,save_rrt_zswcl,save_tx_zswcl]
+    queries = [rrtmergewcl,rrtwclhz,txwlc,txo2owcl,txzswcl]
+    save_paths = [save_rrtmergewcl,save_rrtwclhz,save_txwcl,save_tx_o2owcl,save_tx_zswcl]
     execute_queries_save(conn, queries, save_paths)
 finally:
     # 最终关闭连接
