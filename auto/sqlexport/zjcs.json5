@@ -1,14 +1,5 @@
 {
-    "d_sale_business1": {
-        "销售单号": "SALENO",
-        "会员卡号": "MEMCARDNO",
-        "商品编码": "WAREID",
-        "商品数量": "WAREQTY",
-        "会计日": "ACCDATE",
-        "业务机构": "ORGNAME",
-        "实价": "SALEPRICE",
-        "金额": "NETAMT"
-    },
+//    诺华
     "D_NH_PS_PY": {
         "过账日期": "ZDATE",
         "业务机构名称": "NAME1",
@@ -20,6 +11,7 @@
         "出库数量": "CKSL",
         "批号": "PH"
     },
+//    合肥亿帆
     "D_HFYF_SALE": {
         "过账日期": "GZDATE",
         "业务机构名称": "NAME1",
@@ -46,5 +38,6 @@
         "出库数量": "CKSL",
         "批号": "PH"
     }
+
 }
 
