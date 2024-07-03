@@ -11,7 +11,7 @@ mappings_file= "h2.json5"
 with open(mappings_file, 'r',encoding='utf-8') as file:
     mappings = json5.load(file)
     # print(mappings)
-table="D_LX_MDYSCKD"
+table="d_sale_business1"
 #通过表明找映射关系
 mapping_key = mappings[table]
 print(mapping_key)
@@ -29,7 +29,7 @@ try:
     print("连接成功，正在导入Excel数据！")
     import_excel_to_oracle(engine, output_path, table)
 except Exception as e:
-    print(f"请先关闭_clean文件并检查是否为xlsx格式文件。错误信息：{e}")
+    print(f"请选择单页面文件并先关闭_clean文件并检查是否为xlsx格式文件。错误信息：{e}")
 #导入excel数据
 
 
