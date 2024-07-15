@@ -8,14 +8,14 @@ import itertools
 from DrissionPage._configs.chromium_options import ChromiumOptions
 
 
-def qyautochick(page):
+def qyautochick(page,username,password):
     try:
         # 定位到账号文本框，获取文本框元素
         ele = page.ele('#user')
         # # 输入对文本框输入账号
-        ele.input('10013898')
+        ele.input(username)
         # # 定位到密码文本框并输入密码
-        page.ele('#pwd').input('123321')
+        page.ele('#pwd').input(password)
         # # 点击登录按钮
         page.ele('#btn').click()
     except Exception as e:
@@ -117,15 +117,18 @@ def qyautochick(page):
 # qyautochick(page)
 co = ChromiumOptions().auto_port()
     # 新建2个页面对象，自动分配端口的配置对象能共用，但指定端口的不可以
-page1 = ChromiumPage(co, timeout=2)
-page2 = ChromiumPage(co, timeout=2)
+page1 = ChromiumPage(co, timeout=5)
+page2 = ChromiumPage(co, timeout=5)
+page3 = ChromiumPage(co, timeout=5)
 # 第一个浏览器访问第一个网址
 page1.get('https://portal-rrtuat.myquanyi.com/login.html')
 # 第二个浏览器访问另一个网址
 page2.get('https://portal-rrt.myquanyi.com/index.html')
+page3.get('https://portal-rrtbeta.myquanyi.com/index.html')
 
 
 
     # 多线程同时处理多个页面
-Thread(target=qyautochick, args=(page1,)).start()
-Thread(target=qyautochick, args=(page2,)).start()
+Thread(target=qyautochick, args=(page1,"10013898","123321")).start()
+Thread(target=qyautochick, args=(page2,"10013898","123321")).start()
+Thread(target=qyautochick, args=(page3,"9010","123321")).start()
