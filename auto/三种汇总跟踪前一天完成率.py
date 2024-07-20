@@ -18,56 +18,29 @@ file_qy_zsdc = f'{formatted_date}_药店通诊所挂号记录.xlsx'
 # file_rrtwcl = f'{formatted_date}_瑞人堂完成率.xlsx'
 file_rrtmergewcl = f'{formatted_date}_瑞人堂合并完成率.xlsx'
 file_rrtwclhz = f'{formatted_date}_瑞人堂完成率事业部片区汇总.xlsx'
-file_txwcl = f'{formatted_date}_桐乡完成率.xlsx'
 # file_rrt_o2owcl= f'{formatted_date}_瑞人堂o2o完成率.xlsx'
-file_tx_o2owcl=f'{formatted_date}_桐乡o2o完成率.xlsx'
 # file_rrt_zswcl=f'{formatted_date}_瑞人堂诊所完成率.xlsx'
-file_tx_zswcl=f'{formatted_date}_桐乡诊所完成率.xlsx'
-# file_tx_o2o = f'{formatted_date}_桐乡o2o完成率.xlsx'
-# filename = f'{formatted_date}_销售.csv'
-desktop_path = r'D:\download\桌面'
+
+desktop_path = r'D:\download\桌面\每日完成率'
 output_file = os.path.join(desktop_path, out_file)
 save_sale = os.path.join(desktop_path, file_sale)
 save_qy_zsdc = os.path.join(desktop_path, file_qy_zsdc)
 # save_rrtwcl = os.path.join(desktop_path, file_rrtwcl)
 save_rrtmergewcl = os.path.join(desktop_path, file_rrtmergewcl)
 save_rrtwclhz = os.path.join(desktop_path, file_rrtwclhz)
-save_txwcl = os.path.join(desktop_path, file_txwcl)
-# save_rrt_o2owcl = os.path.join(desktop_path, file_rrt_o2owcl)
-save_tx_o2owcl = os.path.join(desktop_path, file_tx_o2owcl)
-# save_rrt_zswcl = os.path.join(desktop_path, file_rrt_zswcl)
-save_tx_zswcl = os.path.join(desktop_path, file_tx_zswcl)
 
 print(f"save_path:{save_sale}")
 print(f"save_path2:{save_qy_zsdc}")
-# print(f"save_path3:{save_rrtwcl}")
 print(f"save_path3:{save_rrtmergewcl}")
 print(f"save_path3:{save_rrtwclhz}")
-print(f"save_path3:{save_txwcl}")
-# print(f"save_path3:{save_rrt_o2owcl}")
-print(f"save_path3:{save_tx_o2owcl}")
-# print(f"save_path3:{save_rrt_zswcl}")
-print(f"save_path3:{save_tx_zswcl}")
 with open('./sql/qydc.sql', 'r', encoding='utf-8') as file:
     qydc = file.read()
 with open('./sql/qyzsdc.sql', 'r', encoding='utf-8') as file:
     qyzsdc = file.read()
-# with open('./sql/rrto2owcl.sql.', 'r', encoding='utf-8') as file:
-#     rrto2owcl = file.read()
-# with open('./sql/rrtwcl.sql', 'r', encoding='utf-8') as file:
-#     rrtwlc = file.read()
 with open('./sql/rrtmergewcl.sql', 'r', encoding='utf-8') as file:
     rrtmergewcl = file.read()
 with open('./sql/rrtwclhz.sql', 'r', encoding='utf-8') as file:
     rrtwclhz = file.read()
-# with open('./sql/rrtzswcl.sql', 'r', encoding='utf-8') as file:
-#     rrtzswcl = file.read()
-with open('./sql/txo2owcl.sql', 'r', encoding='utf-8') as file:
-    txo2owcl = file.read()
-with open('./sql/txwcl.sql', 'r', encoding='utf-8') as file:
-    txwlc = file.read()
-with open('./sql/txzswcl.sql', 'r', encoding='utf-8') as file:
-    txzswcl = file.read()
 #1.连接qy库并导出sql结果为excel到桌面
 try:
     connection = get_qy_uatmysql()
@@ -97,8 +70,8 @@ import_excel_to_oracle(engine, save_qy_zsdc, "D_QY_ZSDJ")
 try:
     conn = get_oracle_prod()
     # 假设你有多个查询和对应的保存路径
-    queries = [rrtmergewcl,rrtwclhz,txwlc,txo2owcl,txzswcl]
-    save_paths = [save_rrtmergewcl,save_rrtwclhz,save_txwcl,save_tx_o2owcl,save_tx_zswcl]
+    queries = [rrtmergewcl,rrtwclhz]
+    save_paths = [save_rrtmergewcl,save_rrtwclhz]
     execute_queries_save(conn, queries, save_paths)
 finally:
     # 最终关闭连接
@@ -129,3 +102,16 @@ excel_exe_path = r'C:\Program Files\Microsoft Office\root\Office16\EXCEL.EXE'
 #
 subprocess.Popen([excel_exe_path, output_file])
 # subprocess.Popen([excel_exe_path, tx_path])
+# delete_paths=[save_sale,save_qy_zsdc,save_rrtmergewcl,save_rrtwclhz]
+delete_paths=save_paths
+delete_paths.append(save_sale)
+delete_paths.append(save_qy_zsdc)
+for path in delete_paths:
+    try:
+        if os.path.exists(path):
+            os.remove(path)
+            print(f"Deleted: {path}")
+        else:
+            print(f"File does not exist: {path}")
+    except Exception as e:
+        print(f"Error deleting {path}: {e}")
