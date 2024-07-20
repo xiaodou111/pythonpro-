@@ -12,8 +12,10 @@ from auto.utils.gui import get_filename
 # num = int(s)
 # print(num)
 
-filename = get_filename()
+# filename = get_filename()
+filename = r"D:\download\桌面\无法录入海典销售单填写.xlsx"
 save_path = filename
+
 base_name, extension = filename.rsplit('.', 1)  # 分离文件名和扩展名
 output_path = f"{base_name}{'_clean'}.{extension}"  # 构建新的文件名
 # 读取所有工作表
