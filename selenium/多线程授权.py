@@ -34,6 +34,7 @@ def qyautochick(page,username,password):
     compchoice = page.ele('xpath://div[@label="公司编码"]//input[@class="el-input__inner"]')
     comlist = ['RT01', 'RD01', 'RX01', 'RZ41', 'TZ01', 'RP01', 'TX01', 'RZ31', 'RK01', 'RP51', 'RP41', 'RS01', 'RZ11',
                'RP11', 'RF01', 'RB01', 'RP21', 'RJ01', 'RZ01', 'RZ21', 'RP31', 'RH01']
+    k = 1
     infinite_comlist = itertools.cycle(comlist)
     # for everycomp in comlist:
     #     compchoice.click()
@@ -54,7 +55,8 @@ def qyautochick(page,username,password):
                 # page.ele('//div[@class="el-select-dropdown el-popper"]//li[@class="el-select-dropdown__item selected hover"]').click()
                 # page.ele('//div[@class="el-select-dropdown el-popper"]//li[@class="el-select-dropdown__item hover"]').click()
             except Exception as e:
-                print(f'{everycomp}:"找不到公司的下拉选项"')
+                # print(f'{everycomp}:"找不到公司的下拉选项"')
+                pass
             # page.ele('@@placeholder=el-range-input@@text()=开始日期').click()
             # page.ele('.el-range-input').click()
             page.ele('@@placeholder=开始日期@@class=el-range-input').click()
@@ -76,14 +78,16 @@ def qyautochick(page,username,password):
             span_element = page.ele('.el-pagination__total')
             # 获取元素的文本
             span_text = span_element.text
-            print(span_text)
+            # print(span_text)
             # 使用正则表达式提取数字
             number_pattern = r'共 (\d+) 条'
             match = re.search(number_pattern, span_text)
             # 确保找到了匹配项
             if match:
                 number = int(match.group(1))
-                print(f"{everycomp}:需要授权: {number}次")
+                if number>0:
+                    print(f"{everycomp}:需要授权: {number}次")
+
             else:
                 print("未能找到匹配的数字")
             if number == 0:
@@ -93,20 +97,44 @@ def qyautochick(page,username,password):
             except Exception as e:
                 print(f'{everycomp}:"找不到授权元素"')
             for index in range(number):
-                print(f"第{index + 1}次授权")
+                # print(f"第{index + 1}次授权")
                 time.sleep(1)
                 button_elements = page.eles('xpath://button[contains(@class,"el-button--small")]/span[text()="授权"]')
                 if button_elements:
-                    print("正在进行授权")
+                    # print("正在进行授权")
                     button_elements[0].click()
+
+                    # print("正在点击日期授权")
                     page.ele(
                         'xpath://input[@class="el-input__inner" and @placeholder="请选择" and not(@readonly)]').click()
-                    page.ele('@@type=button@@aria-label=后一年').click()
+                    # print("点击日期授权按钮完成")
+
+                    try:
+                         page.ele('@@type=button@@aria-label=后一年').click()
+                    except Exception as e:
+                        print("找不到下一年按钮")
                     # 查找日期为1号的获得了2个,只取第2个点击
+                    time.sleep(1)
                     choose_date = page.eles(
-                        'xpath://div[@class="el-picker-panel__body"]//tr[@class="el-date-table__row"]/td[@class="available"]//span[text()=1][1]')
-                    choose_date[0].click()
+                        'xpath://div[@class="el-picker-panel__body"]//tr[@class="el-date-table__row"]/td[@class="available"]//span[text()=1]')
+                    # 点击报错“该元素没有位置及大小”怎么办？
+                    # 没有位置及大小是正常的，很多元素都没有位置和大小。
+                    # 这个时候你要检查是否页面中有同名元素，定位符没写准确拿到了另一个。
+                    # 如果要点击的元素就是没有位置的，可以强制使用
+                    # 点击，用法是.click(by_js=True)，可以简写为.click('js')。
+                    try:
+                        choose_date[0].click()
+                    except Exception as e:
+                        try:
+                            choose_date[1].click()
+                        except Exception as e:
+                            try:
+                                choose_date[2].click()
+                            except Exception as e:
+                                print("找不到元素")
                     page.ele('xpath://span[text()="提交"]').click()
+                    k += 1
+                    print(f"本次共完成授权{index + 1}次")
                 else:
                     print("未找到可点击的按钮")
     except KeyboardInterrupt:
@@ -116,19 +144,24 @@ def qyautochick(page,username,password):
 # page1=page.get('https://portal-rrt.myquanyi.com/index.html')
 # qyautochick(page)
 co = ChromiumOptions().auto_port()
-    # 新建2个页面对象，自动分配端口的配置对象能共用，但指定端口的不可以
-page1 = ChromiumPage(co, timeout=5)
-page2 = ChromiumPage(co, timeout=5)
-page3 = ChromiumPage(co, timeout=5)
-# 第一个浏览器访问第一个网址
-page1.get('https://portal-rrtuat.myquanyi.com/login.html')
-# 第二个浏览器访问另一个网址
-page2.get('https://portal-rrt.myquanyi.com/index.html')
-page3.get('https://portal-rrtbeta.myquanyi.com/index.html')
+# 禁用保存密码提示气泡
+co.set_pref('credentials_enable_service', False)
+pages_data = [
+    {'url': 'https://portal-rrtuat.myquanyi.com/login.html', 'username': '10013898', 'password': '123321'},
+    {'url': 'https://portal-rrt.myquanyi.com/index.html', 'username': '10013898', 'password': '123321'},
+    {'url': 'https://portal-rrtbeta.myquanyi.com/index.html', 'username': '9010', 'password': '123321'}
+]
+# 为每个页面启动一个新线程
+threads = []
+for data in pages_data:
+    page = ChromiumPage(co, timeout=5)
+    page.get(data['url'])
+    thread = Thread(target=qyautochick, args=(page, data['username'], data['password']))
+    threads.append(thread)
+    thread.start()
+
+# 等待所有线程完成
+for thread in threads:
+    thread.join()
 
 
-
-    # 多线程同时处理多个页面
-Thread(target=qyautochick, args=(page1,"10013898","123321")).start()
-Thread(target=qyautochick, args=(page2,"10013898","123321")).start()
-Thread(target=qyautochick, args=(page3,"9010","123321")).start()
