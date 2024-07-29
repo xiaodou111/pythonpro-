@@ -41,21 +41,22 @@ def connect_to_postgres():
     today = datetime.now()
     # 格式化日期为字符串
     formatted_date = today.strftime('%Y%m%d')
-    out_file = f'{formatted_date}_大屏情况.xlsx'
+    out_file = f'生产库大屏情况.xlsx'
     files = [
-        f'{formatted_date}_门店登录.xlsx',
-        f'{formatted_date}_机台登录.xlsx',
-        f'{formatted_date}_用户登录.xlsx',
-        f'{formatted_date}_零售销售.xlsx',
-        f'{formatted_date}_零售退单.xlsx',
-        f'{formatted_date}_医保销售.xlsx',
-        f'{formatted_date}_医保退单.xlsx',
-        f'{formatted_date}_O2O转单.xlsx',
-        f'{formatted_date}_诊所开方.xlsx',
-        f'{formatted_date}_诊所销售.xlsx',
-        f'{formatted_date}_药店非医保处方.xlsx',
-        f'{formatted_date}_药店医保外配处方.xlsx',
-        f'{formatted_date}_日结对账.xlsx'
+        f'正式门店登录.xlsx',
+        f'正式机台登录.xlsx',
+        f'正式用户登录.xlsx',
+        f'正式零售销售.xlsx',
+        f'正式零售退单.xlsx',
+        f'正式医保销售.xlsx',
+        f'正式医保退单.xlsx',
+        f'正式O2O转单.xlsx',
+        f'正式诊所开方.xlsx',
+        f'正式诊所销售.xlsx',
+        f'正式药店非医保处方.xlsx',
+        f'正式药店医保外配处方.xlsx',
+        f'正式日结对账.xlsx',
+        f'正式工号角色登录.xlsx'
     ]
     desktop_path = r"\\192.168.101.136\dashboard"
     save_paths = [os.path.join(desktop_path, file) for file in files]
@@ -79,7 +80,8 @@ def connect_to_postgres():
         '10zssale.sql': 'j',
         '11ydfybcf.sql': 'k',
         '12ydybwpcf.sql': 'l',
-        '13rjdz.sql': 'm'
+        '13rjdz.sql': 'm',
+        '14yhzdl.sql': 'n'
     }
     # 创建一个空列表，用于存储SQL查询
     queries = []
