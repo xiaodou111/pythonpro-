@@ -11,7 +11,7 @@ mappings_file= "zjcs.json5"
 with open(mappings_file, 'r',encoding='utf-8') as file:
     mappings = json5.load(file)
     # print(mappings)
-table="d_yp_ps_py"
+table="D_NH_PS_PY"
 #通过表明找映射关系
 mapping_key = mappings[table]
 print(mapping_key)

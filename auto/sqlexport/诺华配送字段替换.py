@@ -7,8 +7,8 @@ desktop_path = r'D:\download\桌面'
 # filename = input("请输入Excel文件名：")
 filename = get_filename()
 #
-save_path = desktop_path + '\\' + filename+'.xlsx'
-output_path = desktop_path + '\\'+ filename+'_modified.xlsx'
+# save_path = desktop_path + '\\' + filename+'.xlsx'
+# output_path = desktop_path + '\\'+ filename+'_modified.xlsx'
 # 读取Excel文件
 # 读取Excel文件
 #只修改包含sheet页包含配送的excel

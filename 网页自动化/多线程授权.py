@@ -1,3 +1,4 @@
+from datetime import datetime
 import time
 from threading import Thread
 
@@ -8,7 +9,7 @@ import itertools
 from DrissionPage._configs.chromium_options import ChromiumOptions
 
 
-def qyautochick(page,username,password):
+def qyautochick(page,username,password,env):
     try:
         # 定位到账号文本框，获取文本框元素
         ele = page.ele('#user')
@@ -31,7 +32,8 @@ def qyautochick(page,username,password):
     # #      authorizeds=page.eles('xpath://button[contains(@class,"el-button--small")]/span[text()="授权"]')
     # # except Exception as e:
     # #     print("没有待授权的终端")
-    compchoice = page.ele('xpath://div[@label="公司编码"]//input[@class="el-input__inner"]')
+    time.sleep(2)
+    compchoice = page.ele('xpath://div[@label="公司编码"]//input[@class="el-input__inner"]',timeout=10)
     comlist = ['RT01', 'RD01', 'RX01', 'RZ41', 'TZ01', 'RP01', 'TX01', 'RZ31', 'RK01', 'RP51', 'RP41', 'RS01', 'RZ11',
                'RP11', 'RF01', 'RB01', 'RP21', 'RJ01', 'RZ01', 'RZ21', 'RP31', 'RH01']
     k = 1
@@ -76,6 +78,7 @@ def qyautochick(page,username,password):
             time.sleep(1)
             # 一共多少条需要授权?
             span_element = page.ele('.el-pagination__total')
+
             # 获取元素的文本
             span_text = span_element.text
             # print(span_text)
@@ -86,7 +89,7 @@ def qyautochick(page,username,password):
             if match:
                 number = int(match.group(1))
                 if number>0:
-                    print(f"{everycomp}:需要授权: {number}次")
+                    print(f"环境:{env},公司:{everycomp}:需要授权: {number}次")
 
             else:
                 print("未能找到匹配的数字")
@@ -98,6 +101,10 @@ def qyautochick(page,username,password):
                 print(f'{everycomp}:"找不到授权元素"')
             for index in range(number):
                 # print(f"第{index + 1}次授权")
+                #只显示了第一行的设备名
+                equipname=page.ele('xpath://tr[@class="el-table__row"]/td[contains(@class,"el-table_1_column_5")]').text
+                now = datetime.now()
+                print(f"{now}-正在给环境:{env},公司:{everycomp},设备:{equipname}进行授权")
                 time.sleep(1)
                 button_elements = page.eles('xpath://button[contains(@class,"el-button--small")]/span[text()="授权"]')
                 if button_elements:
@@ -134,7 +141,7 @@ def qyautochick(page,username,password):
                                 print("找不到元素")
                     page.ele('xpath://span[text()="提交"]').click()
                     k += 1
-                    print(f"本次共完成授权{index + 1}次")
+                    # print(f"本次共完成授权{k + 1}次")
                 else:
                     print("未找到可点击的按钮")
     except KeyboardInterrupt:
@@ -147,16 +154,16 @@ co = ChromiumOptions().auto_port()
 # 禁用保存密码提示气泡
 co.set_pref('credentials_enable_service', False)
 pages_data = [
-    {'url': 'https://portal-rrtuat.myquanyi.com/login.html', 'username': '10013898', 'password': '123321'},
-    {'url': 'https://portal-rrt.myquanyi.com/index.html', 'username': '10013898', 'password': '123321'},
-    {'url': 'https://portal-rrtbeta.myquanyi.com/index.html', 'username': '9010', 'password': '123321'}
+    # {'url': 'https://portal-rrtuat.myquanyi.com/login.html', 'username': '10013898', 'password': '123321','env':'uat'},
+    {'url': 'https://portal-rrt.myquanyi.com/index.html', 'username': '10013898', 'password': '123321','env':'prod'},
+    # {'url': 'https://portal-rrtbeta.myquanyi.com/index.html', 'username': '9010', 'password': '123321','env':'beta'}
 ]
 # 为每个页面启动一个新线程
 threads = []
 for data in pages_data:
     page = ChromiumPage(co, timeout=5)
     page.get(data['url'])
-    thread = Thread(target=qyautochick, args=(page, data['username'], data['password']))
+    thread = Thread(target=qyautochick, args=(page, data['username'], data['password'],data['env']))
     threads.append(thread)
     thread.start()
 

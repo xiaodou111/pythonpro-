@@ -1,17 +1,11 @@
-from datetime import datetime
 import time
+import traceback
 from threading import Thread
-
+import datetime
 from DrissionPage import ChromiumPage
 import re
-import itertools
-
-from DrissionPage._base import browser
 from DrissionPage._configs.chromium_options import ChromiumOptions
-from selenium.webdriver import ActionChains, Keys
-from DrissionPage.common import Actions
 from pynput.keyboard import Controller, Key
-
 keyboard = Controller()
 page = ChromiumPage()
 page.get("https://portal-rrt.myquanyi.com/index.html")
@@ -65,9 +59,9 @@ def ys111():
            pass
     else:
         print("未能找到匹配的数字")
-    shyss=page.eles('xpath://span[text()=" 审核 "]')
-    element_count=len(shyss)
-    print(f"本页共{element_count}个需要审核")
+    # shyss=page.eles('xpath://span[text()=" 审核 "]')
+    # element_count=len(shyss)
+    # print(f"本页共{element_count}个需要审核")
     page.ele('xpath://button[@title="查询"]').click()
     j = 0
     while True:
@@ -84,7 +78,7 @@ def ys111():
                   # picture=page.ele('xpath://block/span[text()="001"]')
                   # print(picture.text)
                   page.ele('xpath://span[text()="通过"]').click()
-                  page.ele('xpath://div[@class="dialog__body"]')
+                  # page.ele('xpath://div[@class="dialog__body"]')
                   # ac.scroll(delta_y=2000)
                   time.sleep(2)
                   page.ele('xpath://span[text()="签 名"]',timeout=10).click()
@@ -97,16 +91,19 @@ def ys111():
                   page.eles('xpath://div[@class="el-dialog__header"]//button[@aria-label="Close"]/i[@class="el-dialog__close el-icon el-icon-close"]')[1].click()
                   time.sleep(1)
                   i+=1
-while True:
+now = datetime.datetime.now()
+while now.hour >= 7 and now.hour <= 22:
        try:
+           print(now.hour)
            ys111()
        except Exception as e:
           page.quit()
           print("出错了,正在重试")
+          traceback.print_exc()
           time.sleep(2)
           # co = ChromiumOptions().auto_port()
           co = ChromiumOptions()
-          co.set_argument('--start-maximized')
+          # co.set_argument('--start-maximized')
           # # 禁用保存密码提示气泡
           co.set_pref('credentials_enable_service', False)
           #设置只接管已有浏览器，不自动启动新的

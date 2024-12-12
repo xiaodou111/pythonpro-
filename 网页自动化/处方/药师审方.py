@@ -13,17 +13,18 @@ from DrissionPage.common import Actions
 
 
 def yaoshi(page,username,password,env):
-      while True:
+    while True:
           try:
-              if  page.ele('#user'):
+              if page.ele('#user'):
+
               # 定位到账号文本框，获取文本框元素
-                  ele = page.ele('#user')
-                  # # 输入对文本框输入账号
-                  ele.input(username)
-                  # # 定位到密码文本框并输入密码
-                  page.ele('#pwd').input(password)
-                  # # 点击登录按钮
-                  page.ele('#btn').click()
+                   ele = page.ele('#user')
+                   # # 输入对文本框输入账号
+                   ele.input(username)
+                   # # 定位到密码文本框并输入密码
+                   page.ele('#pwd').input(password)
+                   # # 点击登录按钮
+                   page.ele('#btn').click()
 
           # time.sleep(5)
               page.ele('@text()=药店通',timeout=10).click()
@@ -76,7 +77,7 @@ def yaoshi(page,username,password,env):
                           # print(picture.text)
                           page.ele('xpath://span[text()="通过"]').click()
                           page.ele('xpath://div[@class="dialog__body"]')
-                          # ac.scroll(delta_y=2000)
+                          ac.scroll(delta_y=2000)
                           time.sleep(2)
 
                           page.ele('xpath://span[text()="签 名"]',timeout=10).click()
@@ -100,16 +101,20 @@ def yaoshi(page,username,password,env):
 # li[@class="el-select-dropdown__item"]
 
 
-co = ChromiumOptions().auto_port(# 禁用保存密码提示气泡
+co = ChromiumOptions().auto_port()
+
+# 禁用保存密码提示气泡
 co.set_pref('credentials_enable_service', False)
 pages_data = [
     {'url': 'https://portal-rrt.myquanyi.com/index.html', 'username': '10004932', 'password': '123321','env':'Thread1'},
     {'url': 'https://portal-rrt.myquanyi.com/index.html', 'username': '10020395', 'password': '123321','env':'Thread2'},
     # {'url': 'https://portal-rrt.myquanyi.com/index.html', 'username': '10004932', 'password': '123321','env':'Thread3'},
+]
+
 threads = []
 for data in pages_data:
     page = ChromiumPage(co, timeout=4)
-    # ac = Actions(page)
+    ac = Actions(page)
     page.get(data['url'])
     thread = Thread(target=yaoshi, args=(page, data['username'], data['password'],data['env']))
     threads.append(thread)
@@ -117,13 +122,3 @@ for data in pages_data:
 # 等待所有线程完成
 for thread in threads:
     thread.join()
-def main():
-    while True:
-        try:
-            start_threads()
-            break  # 如果没有异常，跳出循环
-        except Exception as e:
-            print("重新启动中:", e)
-
-if __name__ == "__main__":
-    main()

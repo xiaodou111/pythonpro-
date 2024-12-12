@@ -6,7 +6,7 @@ import pandas as pd
 import psycopg2
 from datetime import datetime, timedelta
 
-from auto.utils.sqlutil import execute_queries_save
+from auto.utils.sqlutil import execute_queries_save, execute_queries_save_concurrently
 
 
 def save_to_excel(excel_data_dict, output_file, max_retries=5, retry_delay=5):
@@ -56,7 +56,8 @@ def connect_to_postgres():
         f'正式药店非医保处方.xlsx',
         f'正式药店医保外配处方.xlsx',
         f'正式日结对账.xlsx',
-        f'正式工号角色登录.xlsx'
+        f'正式工号角色登录.xlsx',
+        f'正式零售销售明细.xlsx'
     ]
     desktop_path = r"\\192.168.101.136\dashboard"
     save_paths = [os.path.join(desktop_path, file) for file in files]
@@ -81,7 +82,8 @@ def connect_to_postgres():
         '11ydfybcf.sql': 'k',
         '12ydybwpcf.sql': 'l',
         '13rjdz.sql': 'm',
-        '14yhzdl.sql': 'n'
+        '14yhzdl.sql': 'n',
+        '15lsmx.sql': 'o'
     }
     # 创建一个空列表，用于存储SQL查询
     queries = []
@@ -100,7 +102,7 @@ def connect_to_postgres():
         # # 创建连接
         # connection = psycopg2.connect(**conn_params)
         # print("Connected to the PostgreSQL server successfully")
-        execute_queries_save(connection, queries, save_paths)
+        execute_queries_save_concurrently(connection, queries, save_paths)
     finally:
         # 关闭游标和连接
         pass

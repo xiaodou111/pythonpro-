@@ -1,5 +1,5 @@
 import pandas as pd
-
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 def query_save_to_excel(connection, sql_query, save_path):
     """
@@ -16,8 +16,14 @@ def query_save_to_excel(connection, sql_query, save_path):
             rows = cursor.fetchall()
             # 将查询结果转换为DataFrame
             df = pd.DataFrame(rows, columns=[desc[0] for desc in cursor.description])
+            # 设置浮点数的显示格式
+            pd.options.display.float_format = '{:.8f}'.format
+            for column in df.select_dtypes(include=['float']):
+                df[column] = df[column].apply(lambda x: '{:.8f}'.format(x)).astype(float)
+            # 修改列名为大写
+            df.columns = df.columns.str.upper()
             # 导出DataFrame到Excel文件
-            df.to_excel(save_path, index=False)
+            df.to_excel(save_path, index=False, float_format='%.10f')
             print(f"文件已保存到 {save_path}")
 
     except Exception as e:
@@ -43,6 +49,43 @@ def execute_queries_save(connection, queries, save_paths):
                 print(f"文件已保存到 {save_path}")
     except Exception as e:
         print(f"处理数据或保存文件时发生错误: {e}")
+
+
+def execute_query_and_save(connection, query, save_path):
+    """
+    执行单个查询并将结果保存到 Excel 文件。
+
+    参数:
+    connection (cx_Oracle.Connection): 数据库连接
+    query (str): 查询语句
+    save_path (str): 保存路径
+    """
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(query)
+            rows = cursor.fetchall()
+            df = pd.DataFrame(rows, columns=[desc[0] for desc in cursor.description])
+            df.to_excel(save_path, index=False)
+            print(f"文件已保存到 {save_path}")
+    except Exception as e:
+        print(f"处理数据或保存文件时发生错误: {e}")
+
+
+def execute_queries_save_concurrently(connection, queries, save_paths):
+    """
+    并发执行一系列查询并将结果保存到 Excel 文件。
+
+    参数:
+    connection (cx_Oracle.Connection): 数据库连接
+    queries (list of str): 查询语句列表
+    save_paths (list of str): 对应的保存路径列表
+    """
+    with ThreadPoolExecutor(max_workers=5) as executor:  # 可以根据系统资源调整 max_workers
+        futures = [executor.submit(execute_query_and_save, connection, query, save_path)
+                   for query, save_path in zip(queries, save_paths)]
+
+        for future in as_completed(futures):
+            future.result()
 
 #从Excel文件导入数据到Oracle数据库。
 def import_excel_to_oracle(engine, excel_path, table_name):

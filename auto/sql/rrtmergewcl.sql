@@ -6,7 +6,7 @@ with new as (select order_date, SUB_UNIT_NUM_ID, tml_num_id
                     where OBUSNO in (select BUSNO from D_BP_BUSNO))
                and order_date = trunc(sysdate)-1
                and not exists(select 1 from d_rrtprod_memorder ex1 WHERE ex1.order_date >= date'2024-06-13' and ex1.create_user_id <= 1 and ex1.series=d_rrtprod_memorder.series)
---              group by order_date, SUB_UNIT_NUM_ID, tml_num_id
+--              group by order_date, SUB_UNIT_NUM_ID, tml_num_idd
              ),
      old as (select h.BUSNO, h.ACCDATE, h.SALENO
              from t_sale_h h
@@ -44,7 +44,8 @@ with new as (select order_date, SUB_UNIT_NUM_ID, tml_num_id
             from  D_BP_BUSNO bs
                      left join old_hz a on bs.BUSNO=a.BUSNO
                      left join new_hz b on substr(a.BUSNO, 2, 4) = b.SUB_UNIT_NUM_ID
-                and a.ACCDATE = b.order_date),
+                and a.ACCDATE = b.order_date
+            where a.sumsl>0),
 o2o_new as (select order_date, SUB_UNIT_NUM_ID, tml_num_id
              from d_rrtprod_memorder
              where sub_unit_num_id in

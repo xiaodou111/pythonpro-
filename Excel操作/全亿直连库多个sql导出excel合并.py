@@ -33,10 +33,10 @@ with open('./sqls/纯销.sql', 'r', encoding='utf-8') as file:
 try:
     conn = get_oracle_qysjzl()
     # 假设你有多个查询和对应的保存路径
-    # queries = [sql1,sql2,sql3,sql4]
-    queries = [sql1,sql2,sql3]
-    # save_paths = [save_path, save_path2,save_path3,save_path4]
-    save_paths = [save_path, save_path2,save_path3]
+    queries = [sql1,sql2,sql3,sql4]
+    # queries = [sql1,sql2,sql3]
+    save_paths = [save_path, save_path2,save_path3,save_path4]
+    # save_paths = [save_path, save_path2,save_path3]
     execute_queries_save(conn, queries, save_paths)
 finally:
     # 最终关闭连接
@@ -50,14 +50,14 @@ excel_exe_path = r'C:\Program Files\Microsoft Office\root\Office16\EXCEL.EXE'
 df1 = read_excel(save_path)
 df2 = read_excel(save_path2)
 df3 = read_excel(save_path3)
-# df4 = read_excel(save_path4)
+df4 = read_excel(save_path4)
 
 # 将数据框存入字典，键为Sheet名
-# dfs = {'配送': df1, '采购': df2, '库存': df3,'纯销':df4}
-dfs = {'配送': df1, '库存': df2, '采购': df3}
+dfs = {'配送': df1, '期初库存': df2, '采购': df3,'期末库存':df4}
+# dfs = {'配送': df1, '库存': df2, '采购': df3}
 
 # 合并到一个Excel文件
-output_file = desktop_path + '\\葛兰素.xlsx'
+output_file = desktop_path + '\\阿斯利康.xlsx'
 write_to_excel(dfs, output_file)
 
 # 使用Excel打开合并后的文件

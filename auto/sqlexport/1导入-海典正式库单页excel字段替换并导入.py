@@ -11,7 +11,7 @@ mappings_file= "h2.json5"
 with open(mappings_file, 'r',encoding='utf-8') as file:
     mappings = json5.load(file)
     # print(mappings)
-table="d_sale_business1"
+table="D_RRT_WARE_SALEPRICE_2"
 #通过表明找映射关系
 mapping_key = mappings[table]
 print(mapping_key)

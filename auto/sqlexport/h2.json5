@@ -5,13 +5,13 @@
         "商品编码": "WAREID",
         "商品数量": "WAREQTY",
         "会计日": "ACCDATE",
-        "业务机构": "ORGNAME",
-        "实价": "SALEPRICE",
+        "门店名称": "ORGNAME",
+        "单价": "SALEPRICE",
         "金额": "NETAMT"
     },
     "D_TSL_BUSINESS": {
         "会计日": "ACCDATE",
-        "业务机构名称": "CK",
+        "仓库": "CK",
         "单据类型": "DJLX",
         "入库数量": "RKSL",
         "出库数量": "CKSL",
@@ -19,7 +19,7 @@
         "商品名称": "WARENAME",
         "规格": "GG",
         "生产企业": "SCQY",
-        "相关单位名称": "ORGNAME",
+        "业务机构名称": "ORGNAME",
         "备注": "NOTES",
         "单位": "WAREUNIT",
         "生产批号": "MAKENO",
@@ -69,5 +69,9 @@
         "出库数量": "CKSL",
         "批号": "ZGYSPH",
         "供应商名称": "GYS"
+    },
+    "D_RRT_WARE_SALEPRICE_2": {
+          "商家SKU编码":"OWAREID",
+          "商品价格":"SALEPRICE"
     }
 }

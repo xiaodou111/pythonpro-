@@ -77,10 +77,15 @@ def yssf(username,password,port,env):
                 page.ele('xpath://span[text()="通过"]').click()
                 page.ele('xpath://div[@class="dialog__body"]')
                 # ac.scroll(delta_y=2000)
-                time.sleep(2)
+                time.sleep(4)
                 page.ele('xpath://span[text()="签 名"]', timeout=10).click()
                 time.sleep(1)
                 page.ele('xpath://span[text()="通 过"]', timeout=10).click()
+                time.sleep(2)
+                #following-sibling获取下一个兄弟节点
+                # if page.ele('xpath://div[@class="el-dialog__header"]/span[text()="处方签名"]/following-sibling::button[1]'):
+                #     page.ele('xpath://div[@class="el-dialog__header"]/span[text()="处方签名"]/following-sibling::button[1]').click()
+
                 j += 1
                 print(f"{env}已通过{j}张处方")
                 # print("已点击")
@@ -94,6 +99,7 @@ def yssf(username,password,port,env):
 pages_data = [
     {'url': 'https://portal-rrt.myquanyi.com/index.html', 'username': '10004932', 'password': 'rrt1212#','env':'瑞人堂','port':'7836'},
     {'url': 'https://portal-rrt.myquanyi.com/index.html', 'username': '10020395', 'password': 'rrt1212#','env':'康康','port':'7837'},
+    {'url': 'https://portal-rrt.myquanyi.com/index.html', 'username': '10001631', 'password': 'rrt1212#','env':'瑞人堂','port':'7838'},
 ]
 # 为每个页面启动一个新线程
 threads = []
@@ -112,8 +118,9 @@ for data in pages_data:
 #           continue
 
 # 主循环开始
-now = datetime.datetime.now()
-while now.hour >= 7 and now.hour <= 22:
+# now = datetime.datetime.now()
+# while now.hour >= 7 and now.hour <= 22:
+while True:
     # 检查是否有线程尚未完成
     for index, thread in enumerate(threads):
         if not thread.is_alive():  # 如果线程已经完成

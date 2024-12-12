@@ -62,7 +62,8 @@ from re q
          join t_busno_class_set ts1 on q.busno=ts1.busno and ts1.classgroupno ='304'
          join t_busno_class_base tb1 on ts1.classgroupno=tb1.classgroupno and ts1.classcode=tb1.classcode
          join t_busno_class_set ts2 on q.busno=ts2.busno and ts2.classgroupno ='305'
-         join t_busno_class_base tb2 on ts2.classgroupno=tb2.classgroupno and ts2.classcode=tb2.classcode)
+         join t_busno_class_base tb2 on ts2.classgroupno=tb2.classgroupno and ts2.classcode=tb2.classcode
+where 老系统销售单数>0)
 
 select 日期,事业部,片区,sum(计入) as 机构数,
        sum(低于50笔记录) as 录单低于50笔机构数,sum(低于50笔记录)/sum(计入) as 录单低于50笔机构数占比,
