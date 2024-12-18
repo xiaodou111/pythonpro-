@@ -5,6 +5,7 @@ from auto.datalink.datalink import get_oracle_qysjzl
 from auto.utils.excelutil import read_excel, write_to_excel
 from auto.utils.sqlutil import execute_queries_save
 import subprocess
+from pathlib import Path
 # 2. 定义函数：获取文件夹中的所有SQL文件
 def get_sql_files(folder_path):
     sql_files = []
@@ -45,10 +46,13 @@ def cleanup_temp_files(temp_folder):
 
 if __name__ == "__main__":
     # 指定文件夹路径和输出文件路径
-    sql_folder = r'./进销存'  # 替换为您的SQL文件夹路径
+    sql_folder = r'./进销存汇总/阿斯利康'  # SQL文件夹路径
     desktop_path = r'D:\download\桌面'
     temp_folder = r'D:\download\temp'  # 临时文件夹路径
-    output_file = os.path.join(desktop_path, '阿斯利康.xlsx')
+    # 获取 sql_folder 最后一层文件夹的名称
+    folder_name = Path(sql_folder).name
+    # 构建输出文件路径，使用最后一层文件夹名称作为文件名
+    output_file = os.path.join(desktop_path, f'{folder_name}.xlsx')
 
     # 确保临时文件夹存在
     os.makedirs(temp_folder, exist_ok=True)
